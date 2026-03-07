@@ -222,15 +222,17 @@ def remind():
             def to_dt(v):
                 if not v:
                     return None
-                return v.get().date() if hasattr(v, "get") else (v.toDate() if hasattr(v, "toDate") else None)
+                return v if isinstance(v, datetime) else None
 
             start  = med.get("startDate")
             stop   = med.get("stopDate")
             expiry = med.get("expiryDate")
 
-            start_dt  = start.toDate()  if start  else None
-            stop_dt   = stop.toDate()   if stop   else None
-            expiry_dt = expiry.toDate() if expiry else None
+            # Python Firestore SDK returns datetime directly
+            to_dt = lambda v: v if isinstance(v, datetime) else None
+            start_dt  = to_dt(start)
+            stop_dt   = to_dt(stop)
+            expiry_dt = to_dt(expiry)
 
             today = now.date()
             if start_dt  and today < start_dt.date():  continue
