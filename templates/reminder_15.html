@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dose Reminder – MyPills</title>
+</head>
+<body style="margin:0;padding:0;background:#f7f7f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+
+  <!-- WRAPPER -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f7f5;padding:40px 16px;">
+    <tr>
+      <td align="center">
+
+        <!-- CARD -->
+        <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+          <!-- HEADER BAND -->
+          <tr>
+            <td style="background:#c0392b;padding:28px 40px;text-align:left;">
+              <table cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="vertical-align:middle;">
+                    <img src="https://mypills.kidslearninglab.com/pill.png" alt="MyPills" width="42" height="42" style="display:inline-block;vertical-align:middle;margin-right:12px;border-radius:50%;background:rgba(255,255,255,0.2);">
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <span style="color:#ffffff;font-size:22px;font-weight:700;letter-spacing:-0.5px;">MyPills</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- COUNTDOWN BADGE -->
+          <tr>
+            <td style="padding:36px 40px 0;text-align:center;">
+              <span style="display:inline-block;background:#fff0ef;color:#c0392b;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:6px 16px;border-radius:100px;">
+                ⏰ &nbsp;15 Minutes Away
+              </span>
+            </td>
+          </tr>
+
+          <!-- HEADING -->
+          <tr>
+            <td style="padding:20px 40px 8px;text-align:center;">
+              <h1 style="margin:0;font-size:28px;font-weight:700;color:#1a1a1a;letter-spacing:-0.5px;line-height:1.2;">
+                Time to get ready,<br>
+                <span style="color:#c0392b;">{{user_name}}</span>
+              </h1>
+            </td>
+          </tr>
+
+          <!-- SUBTEXT -->
+          <tr>
+            <td style="padding:8px 40px 28px;text-align:center;">
+              <p style="margin:0;font-size:15px;color:#888;line-height:1.6;">
+                Your dose is coming up in <strong style="color:#1a1a1a;">15 minutes</strong>. Get it ready now so you don't miss it.
+              </p>
+            </td>
+          </tr>
+
+          <!-- DIVIDER -->
+          <tr>
+            <td style="padding:0 40px;">
+              <div style="height:1px;background:#f0f0ee;"></div>
+            </td>
+          </tr>
+
+          <!-- MED CARD -->
+          <tr>
+            <td style="padding:28px 40px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f7f5;border-radius:14px;padding:20px 24px;">
+                <tr>
+                  <td>
+                    <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;">Medication</p>
+                    <p style="margin:0;font-size:20px;font-weight:700;color:#1a1a1a;letter-spacing:-0.3px;">{{medication_name}}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-top:16px;">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td width="50%">
+                          <p style="margin:0 0 3px;font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;">Dosage</p>
+                          <p style="margin:0;font-size:15px;font-weight:600;color:#1a1a1a;">{{dosage}}</p>
+                        </td>
+                        <td width="50%">
+                          <p style="margin:0 0 3px;font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;">Scheduled Time</p>
+                          <p style="margin:0;font-size:15px;font-weight:600;color:#c0392b;">{{dose_time}}</p>
+                        </td>
+                      </tr>
+                      <!-- Dose number row — only shown if totalDoses > 1 -->
+                      <tr>
+                        <td colspan="2" style="padding-top:12px;">
+                          <p style="margin:0 0 3px;font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;">Dose</p>
+                          <p style="margin:0;font-size:15px;font-weight:600;color:#1a1a1a;">{{dose_number}}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- BUTTONS -->
+          <tr>
+            <td style="padding:0 40px 36px;">
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td width="48%" style="padding-right:8px;">
+                    <a href="https://mypills.kidslearninglab.com/medications.html"
+                       style="display:block;text-align:center;background:#c0392b;color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;padding:14px 20px;border-radius:10px;letter-spacing:0.01em;">
+                      💊 &nbsp;Check Medications
+                    </a>
+                  </td>
+                  <td width="48%" style="padding-left:8px;">
+                    <a href="https://mypills.kidslearninglab.com/calendar.html"
+                       style="display:block;text-align:center;background:#ffffff;color:#c0392b;text-decoration:none;font-size:14px;font-weight:700;padding:14px 20px;border-radius:10px;letter-spacing:0.01em;border:1.5px solid #c0392b;">
+                      ✓ &nbsp;Mark as Taken/Skipped
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- DIVIDER -->
+          <tr>
+            <td style="padding:0 40px;">
+              <div style="height:1px;background:#f0f0ee;"></div>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td style="padding:24px 40px;text-align:center;">
+              <p style="margin:0;font-size:12px;color:#bbb;line-height:1.6;">
+                You're receiving this because you have a medication reminder set in MyPills.<br>
+                <a href="https://mypills.kidslearninglab.com" style="color:#c0392b;text-decoration:none;font-weight:600;">mypills.kidslearninglab.com</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- END CARD -->
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

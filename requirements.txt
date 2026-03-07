@@ -1,0 +1,5 @@
+flask
+gunicorn
+firebase-admin
+resend
+pytz
