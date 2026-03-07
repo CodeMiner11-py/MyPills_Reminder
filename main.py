@@ -268,5 +268,27 @@ def remind():
         "errors": errors
     })
 
+@app.route("/test")
+def test_email():
+    try:
+        html = load_template("reminder_15.html")
+        html = fill_template(
+            html,
+            user_name="Eshaan",
+            medication_name="Metformin",
+            dosage="500 MG",
+            dose_time="8:00 AM",
+            dose_number="Dose 1 of 2"
+        )
+        resend.Emails.send({
+            "from": "MyPills <reminders@mypills.kidslearninglab.com>",
+            "to": "hello@kidslearninglab.com",
+            "subject": "⏰ Test – Metformin in 15 minutes",
+            "html": html
+        })
+        return jsonify({"status": "sent", "to": "hello@kidslearninglab.com"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 if __name__ == "__main__":
     app.run(debug=False)
