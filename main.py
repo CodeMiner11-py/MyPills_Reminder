@@ -571,6 +571,71 @@ def add_note():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route("/invite", methods=["POST"])
+def invite():
+    try:
+        data          = request.get_json(force=True) or {}
+        invitee_email = data.get("invitee_email", "").strip()
+        inviter_name  = data.get("inviter_name", "Someone").strip()
+        inviter_email = data.get("inviter_email", "").strip()
+
+        if not invitee_email:
+            return jsonify({"status": "error", "message": "invitee_email required"}), 400
+
+        resend.Emails.send({
+            "from": "MyPills <reminders@mypills.kidslearninglab.com>",
+            "to": invitee_email,
+            "subject": f"{inviter_name} has invited you to join MyPills to view their data",
+            "html": f'''<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Join MyPills</title></head>
+<body style="margin:0;padding:0;background:#f7f7f5;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f7f5;padding:40px 16px;">
+<tr><td align="center">
+<table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+<tr><td style="background:#c0392b;padding:28px 40px;text-align:left;">
+  <table cellpadding="0" cellspacing="0"><tr>
+    <td style="vertical-align:middle;"><img src="https://mypills.kidslearninglab.com/pill.png" alt="MyPills" width="42" height="42" style="display:inline-block;vertical-align:middle;margin-right:12px;border-radius:50%;background:rgba(255,255,255,0.2);"></td>
+    <td style="vertical-align:middle;"><span style="color:#ffffff;font-size:22px;font-weight:700;letter-spacing:-0.5px;">MyPills</span></td>
+  </tr></table>
+</td></tr>
+
+<tr><td style="padding:36px 40px 8px;text-align:center;">
+  <span style="display:inline-block;background:#fff0ef;color:#c0392b;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:6px 16px;border-radius:100px;">💌 &nbsp;You\'ve been invited</span>
+</td></tr>
+
+<tr><td style="padding:20px 40px 8px;text-align:center;">
+  <h1 style="margin:0;font-size:28px;font-weight:700;color:#1a1a1a;letter-spacing:-0.5px;line-height:1.3;">Join MyPills to view<br><span style="color:#c0392b;">{inviter_name}\'s</span> data</h1>
+</td></tr>
+
+<tr><td style="padding:12px 40px 28px;text-align:center;">
+  <p style="margin:0;font-size:15px;color:#888;line-height:1.6;">{inviter_name} wants you to keep a watch on their MyPills data. Click the button today to continue.</p>
+</td></tr>
+
+<tr><td style="padding:0 40px;"><div style="height:1px;background:#f0f0ee;"></div></td></tr>
+
+<tr><td style="padding:28px 40px;text-align:center;">
+  <a href="https://mypills.kidslearninglab.com/continue.html" style="display:inline-block;background:#c0392b;color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;padding:16px 36px;border-radius:12px;box-shadow:0 4px 14px rgba(192,57,43,0.35);">View {inviter_name}\'s Data →</a>
+</td></tr>
+
+<tr><td style="padding:0 40px;"><div style="height:1px;background:#f0f0ee;"></div></td></tr>
+
+<tr><td style="padding:24px 40px;text-align:center;">
+  <p style="margin:0;font-size:12px;color:#bbb;line-height:1.6;">You received this because {inviter_name} ({inviter_email}) added you as a caregiver on MyPills.<br>
+  <a href="https://mypills.kidslearninglab.com" style="color:#c0392b;text-decoration:none;font-weight:600;">mypills.kidslearninglab.com</a></p>
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+</body></html>'''
+        })
+        return jsonify({"status": "sent"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
 @app.route("/test")
 def test_email():
     try:
