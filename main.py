@@ -582,6 +582,11 @@ def invite():
         if not invitee_email:
             return jsonify({"status": "error", "message": "invitee_email required"}), 400
 
+        # Check if invitee already has a MyPills account — skip email if so
+        existing = db.collection("users").where("email", "==", invitee_email).limit(1).get()
+        if existing:
+            return jsonify({"status": "skipped", "message": "User already has an account"})
+
         resend.Emails.send({
             "from": "MyPills <reminders@mypills.kidslearninglab.com>",
             "to": invitee_email,
