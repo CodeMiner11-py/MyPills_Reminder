@@ -449,6 +449,125 @@ def remind():
         "errors": errors
     })
 
+# ── Note / caregiver message email ────────────────────────────────────────────
+def note_email_html(user_name, message, sender_name=None):
+    from_label = sender_name if sender_name else user_name
+    return f'''<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>New Message – MyPills</title></head>
+<body style="margin:0;padding:0;background:#f7f7f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f7f5;padding:40px 16px;">
+<tr><td align="center">
+<table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+  <!-- Header -->
+  <tr><td style="background:#c0392b;padding:28px 40px;text-align:left;">
+    <table cellpadding="0" cellspacing="0"><tr>
+      <td style="vertical-align:middle;"><img src="https://mypills.kidslearninglab.com/pill.png" alt="MyPills" width="42" height="42" style="display:inline-block;vertical-align:middle;margin-right:12px;border-radius:50%;background:rgba(255,255,255,0.2);"></td>
+      <td style="vertical-align:middle;"><span style="color:#ffffff;font-size:22px;font-weight:700;letter-spacing:-0.5px;">MyPills</span></td>
+    </tr></table>
+  </td></tr>
+
+  <!-- Badge -->
+  <tr><td style="padding:36px 40px 0;text-align:center;">
+    <span style="display:inline-block;background:#fff0ef;color:#c0392b;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:6px 16px;border-radius:100px;">💬 &nbsp;New Message</span>
+  </td></tr>
+
+  <!-- Heading -->
+  <tr><td style="padding:20px 40px 8px;text-align:center;">
+    <h1 style="margin:0;font-size:28px;font-weight:700;color:#1a1a1a;letter-spacing:-0.5px;line-height:1.2;">
+      You have a new message
+    </h1>
+  </td></tr>
+
+  <!-- Subtext -->
+  <tr><td style="padding:8px 40px 28px;text-align:center;">
+    <p style="margin:0;font-size:15px;color:#888;line-height:1.6;">
+      <strong style="color:#1a1a1a;">{from_label}</strong> sent you a note via MyPills.
+    </p>
+  </td></tr>
+
+  <tr><td style="padding:0 40px;"><div style="height:1px;background:#f0f0ee;"></div></td></tr>
+
+  <!-- Message bubble -->
+  <tr><td style="padding:28px 40px;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f7f5;border-radius:14px;padding:24px 28px;">
+      <tr><td>
+        <p style="margin:0 0 10px;font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;">Message</p>
+        <p style="margin:0;font-size:16px;color:#1a1a1a;line-height:1.7;white-space:pre-wrap;">{message}</p>
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <!-- CTA -->
+  <tr><td style="padding:0 40px 36px;">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td align="center">
+        <a href="https://mypills.kidslearninglab.com" style="display:inline-block;text-align:center;background:#c0392b;color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;padding:14px 32px;border-radius:10px;">Open MyPills</a>
+      </td>
+    </tr></table>
+  </td></tr>
+
+  <tr><td style="padding:0 40px;"><div style="height:1px;background:#f0f0ee;"></div></td></tr>
+
+  <!-- Footer -->
+  <tr><td style="padding:24px 40px;text-align:center;">
+    <p style="margin:0;font-size:12px;color:#bbb;line-height:1.6;">
+      You're receiving this because someone shared a note with you via MyPills.<br>
+      <a href="https://mypills.kidslearninglab.com" style="color:#c0392b;text-decoration:none;font-weight:600;">mypills.kidslearninglab.com</a>
+    </p>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>'''
+
+
+@app.route("/add_note", methods=["GET", "POST"])
+def add_note():
+    """
+    Send a caregiver note email to any address.
+
+    Query params / JSON body:
+      - to        (required) : recipient email address
+      - message   (required) : the note body
+      - from_name (optional) : display name of the sender (shown in email)
+    """
+    from flask import request
+
+    # Accept both GET params and JSON body
+    if request.is_json:
+        payload = request.get_json() or {}
+    else:
+        payload = request.args if request.method == "GET" else request.form
+
+    to_email   = payload.get("to", "").strip()
+    message    = payload.get("message", "").strip()
+    from_name  = payload.get("from_name", "").strip() or "Your care team"
+
+    if not to_email:
+        return jsonify({"status": "error", "message": "Missing required field: to"}), 400
+    if not message:
+        return jsonify({"status": "error", "message": "Missing required field: message"}), 400
+
+    try:
+        html = note_email_html(
+            user_name=from_name,
+            message=message,
+            sender_name=from_name,
+        )
+        resend.Emails.send({
+            "from": "MyPills <reminders@mypills.kidslearninglab.com>",
+            "to": to_email,
+            "subject": f"💬 New message from {from_name} via MyPills",
+            "html": html,
+        })
+        return jsonify({"status": "sent", "to": to_email})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 @app.route("/test")
 def test_email():
     try:
