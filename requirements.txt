@@ -3,3 +3,4 @@ gunicorn
 firebase-admin
 resend
 pytz
+flask_cors
