@@ -7,8 +7,11 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import resend
 import pytz
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+CORS(app, origins=["https://mypills.kidslearninglab.com"])
 
 # ── Firebase init ──────────────────────────────────────────────────────────────
 def init_firebase():
