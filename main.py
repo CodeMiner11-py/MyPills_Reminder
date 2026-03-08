@@ -545,7 +545,7 @@ def add_note():
 
     to_email   = payload.get("to", "").strip()
     message    = payload.get("message", "").strip()
-    from_name  = payload.get("from_name", "").strip() or "Your care team"
+    from_name  = payload.get("from_name", "").strip() or "Your patient"
 
     if not to_email:
         return jsonify({"status": "error", "message": "Missing required field: to"}), 400
