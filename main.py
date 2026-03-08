@@ -486,7 +486,7 @@ def note_email_html(user_name, message, sender_name=None):
   <!-- Subtext -->
   <tr><td style="padding:8px 40px 28px;text-align:center;">
     <p style="margin:0;font-size:15px;color:#888;line-height:1.6;">
-      <strong style="color:#1a1a1a;">{from_label}</strong> sent you a note via MyPills.
+      <strong style="color:#1a1a1a;">{from_label}</strong> (patient) sent you a note via MyPills.
     </p>
   </td></tr>
 
@@ -594,4 +594,5 @@ def test_email():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
